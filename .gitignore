@@ -1,0 +1,24 @@
+*.pdf
+*.ods
+*.ods#
+*.txt
+*.png
+*.o
+*.a
+.nfs*
+
+#test files:
+test.c
+dummy.c
+logfile.txt
+
+# IDE
+.vscode
+
+#folders:
+test/
+
+# binaries
+*.out
+ft_shmup
+
