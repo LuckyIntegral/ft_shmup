@@ -17,8 +17,8 @@ logfile.txt
 
 #folders:
 test/
+objs/
 
 # binaries
 *.out
 ft_shmup
-
