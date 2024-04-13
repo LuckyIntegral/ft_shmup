@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Point.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dfdfdfdfd <fdfdfdfd>                       +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:55:02 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/12 21:55:09 by dfdfdfdfd        ###   ########.fr       */
+/*   Updated: 2024/04/13 17:05:11 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,26 @@
 #ifndef POINT_HPP
 # define POINT_HPP
 
-
 # include <string>
 
-# define DEFAULT_X 0
 # define DEFAULT_Y 0
+# define DEFAULT_X 0
 
 class Point {
 protected:
-	int					_x;
 	int					_y;
+	int					_x;
 
 public:
 	Point();
-	Point( int x, int y );
+	Point( int y, int x );
 	Point( const Point &other );
 	~Point();
 
-	int					getX( void ) const;
-	void				setX( const int x );
 	int					getY( void ) const;
 	void				setY( const int y );
+	int					getX( void ) const;
+	void				setX( const int x );
 
 	Point &operator=( const Point &other );
 };

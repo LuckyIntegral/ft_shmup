@@ -9,6 +9,7 @@
 
 #test files:
 test.c
+test.cpp
 dummy.c
 logfile.txt
 

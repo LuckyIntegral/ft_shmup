@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Point.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:55:02 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/12 21:55:02 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/13 17:04:29 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,36 @@
 
 #include <iostream>
 
-Point::Point() : _x(DEFAULT_X), _y(DEFAULT_Y) {}
-Point::Point( int x, int y ) : _x(x), _y(y) {}
-Point::Point( const Point &other ) : _x(other._x), _y(other._y) {}
+Point::Point() : _y(DEFAULT_Y), _x(DEFAULT_X) {}
+Point::Point( int y, int x ) : _y(y), _x(x) {}
+Point::Point( const Point &other ) : _y(other._y), _x(other._x) {}
 Point::~Point() {}
-
-int Point::getX( void ) const {
-	return (this->_x);
-}
 
 void Point::setX( const int x ) {
 	this->_x = x;
 }
 
-int Point::getY( void ) const {
-	return (this->_y);
+int Point::getX( void ) const {
+	return (this->_x);
 }
 
 void Point::setY( const int y ) {
 	this->_y = y;
 }
 
+int Point::getY( void ) const {
+	return (this->_y);
+}
+
 Point &Point::operator=( const Point &other ) {
-	this->_x = other._x;
 	this->_y = other._y;
+	this->_x = other._x;
 	return (*this);
 }
 
 std::ostream	&operator<<( std::ostream &stream, const Point &instance ) {
 	stream << "{Point:"
-		<< "x=" << instance.getX() << ','
-		<< "y=" << instance.getY() << '}';
+		<< "y=" << instance.getY() << ','
+		<< "x=" << instance.getX() << '}';
 	return (stream);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Player.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dfdfdfdfd <fdfdfdfd>                       +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:09:10 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/12 23:17:18 by dfdfdfdfd        ###   ########.fr       */
+/*   Updated: 2024/04/13 17:17:33 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ void	Player::goRight( int steps ) {
 	this->setPosition(Point(this->getPosition().getX() + steps, this->getPosition().getY()));
 }
 
+void	Player::draw( WINDOW *win ) const {
+	mvwprintw(win, this->getPosition().getY(), this->getPosition().getX(), "P");
+}
 
 std::ostream	&operator<<( std::ostream &stream, const Player &instance ) {
 	stream << "{Player:{"

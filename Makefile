@@ -4,7 +4,7 @@
 
 CXX			= c++
 RM			= rm -rf
-CXXFLAGS	= -Wall -Wextra -Werror -MD -MP
+CXXFLAGS	= -Wall -Wextra -Werror -MD -MP -g
 LINKFLAGS	= -lncurses
 MAKEFLAGS	= -j$(nproc) --no-print-directory
 
