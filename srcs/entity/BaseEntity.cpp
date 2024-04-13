@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BaseEntity.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:07:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/12 22:07:11 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/13 20:52:13 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <iostream>
 
 BaseEntity::BaseEntity() : _health(DEFAULT_HEALTH), _position(DEFAULT_POSITION) {}
-BaseEntity::BaseEntity( int health, Point position ) : _health(health), _position(position) {}
+BaseEntity::BaseEntity( int health, Point position, std::string skin, int speed ) : _health(health), _position(position), _skin(skin), _speed(speed) {}
 BaseEntity::BaseEntity( const BaseEntity &other ) : _health(other._health), _position(other._position) {}
 BaseEntity::~BaseEntity() {}
 
@@ -33,6 +33,22 @@ Point BaseEntity::getPosition( void ) const {
 
 void BaseEntity::setPosition( const Point position ) {
 	this->_position = position;
+}
+
+std::string BaseEntity::getSkin( void ) const {
+	return (this->_skin);
+}
+
+void BaseEntity::setSkin( std::string skin ) {
+	this->_skin = skin;
+}
+
+int BaseEntity::getSpeed( void ) const {
+	return (this->_speed);
+}
+
+void BaseEntity::setSpeed( const int speed ) {
+	this->_speed = speed;
 }
 
 BaseEntity &BaseEntity::operator=( const BaseEntity &other ) {

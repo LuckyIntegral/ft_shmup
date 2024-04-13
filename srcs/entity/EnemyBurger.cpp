@@ -1,42 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Enemy.cpp                                          :+:      :+:    :+:   */
+/*   EnemyBurger.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dfdfdfdfd <fdfdfdfd>                       +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:08:25 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/12 22:12:05 by dfdfdfdfd        ###   ########.fr       */
+/*   Updated: 2024/04/13 19:40:36 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Enemy.hpp"
+#include "EnemyBurger.hpp"
 #include "BaseEntity.hpp"
 
 #include <iostream>
 
-Enemy::Enemy() : BaseEntity(), _speed(DEFAULT_SPEED) {}
-Enemy::Enemy( int speed, int health, Point position ) : BaseEntity(health, position), _speed(speed) {}
-Enemy::Enemy( const Enemy &other ) : BaseEntity(other), _speed(other._speed) {}
-Enemy::~Enemy() {}
+EnemyBurger::EnemyBurger() : BaseEntity() {}
+EnemyBurger::EnemyBurger( Point position ) : BaseEntity(BURGER_HEALTH, position, BURGER_SKIN, BURGER_SPEED) {}
+EnemyBurger::EnemyBurger( const EnemyBurger &other ) : BaseEntity(other) {}
+EnemyBurger::~EnemyBurger() {}
 
-int Enemy::getSpeed( void ) const {
-	return (this->_speed);
+void	EnemyBurger::move( size_t frame ) {
+	if (frame % this->_speed == 0) {
+		this->setPosition(Point(this->getPosition().getY() + 1, this->getPosition().getX()));
+	}
 }
 
-void Enemy::setSpeed( const int speed ) {
-	this->_speed = speed;
-}
-
-Enemy &Enemy::operator=( const Enemy &other ) {
+EnemyBurger &EnemyBurger::operator=( const EnemyBurger &other ) {
 	this->_health = other.getHealth();
 	this->_position = other.getPosition();
 	this->_speed = other._speed;
 	return (*this);
 }
 
-std::ostream	&operator<<( std::ostream &stream, const Enemy &instance ) {
-	stream << "{Enemy:"
+std::ostream	&operator<<( std::ostream &stream, const EnemyBurger &instance ) {
+	stream << "{EnemyBurger:"
 		<< "speed=" << instance.getSpeed()
 		<< ",health=" << instance.getHealth()
 		<< ",position=" << instance.getPosition()

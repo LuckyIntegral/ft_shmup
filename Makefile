@@ -4,7 +4,7 @@
 
 CXX			= c++
 RM			= rm -rf
-CXXFLAGS	= -Wall -Wextra -Werror -MD -MP
+CXXFLAGS	= -Wall -Wextra -Werror -MD -MP -g
 LINKFLAGS	= -lncurses
 MAKEFLAGS	= -j$(nproc) --no-print-directory
 
@@ -12,9 +12,10 @@ NAME		= ft_shmup
 SRCSDIR		= srcs
 SRCS		= \
 			${SRCSDIR}/entity/BaseEntity.cpp \
-			${SRCSDIR}/entity/Enemy.cpp \
+			${SRCSDIR}/entity/EnemyBurger.cpp \
 			${SRCSDIR}/entity/Player.cpp \
 			${SRCSDIR}/entity/Point.cpp \
+			${SRCSDIR}/entity/Bullet.cpp \
 			${SRCSDIR}/Game.cpp \
 			${SRCSDIR}/main.cpp
 
