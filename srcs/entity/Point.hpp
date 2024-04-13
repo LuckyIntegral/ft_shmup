@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:55:02 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 17:05:11 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:00:35 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ public:
 	void				setY( const int y );
 	int					getX( void ) const;
 	void				setX( const int x );
+
+	bool				operator==( const Point &other );
 
 	Point &operator=( const Point &other );
 };

@@ -6,91 +6,131 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 17:36:58 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/13 23:38:09 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Game.hpp"
+#include "entity/BaseEntity.hpp"
+#include "entity/EnemyBurger.hpp"
 
+#include <cstddef>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
+#include <ncurses.h>
 
-Game::Game() : _entities(), _gameStatus(DEFAULT_GAME_STATUS), _score(0), _screenHeight(BATTLE_HEIGHT), _screenWidth(SCREEN_WIDTH) {
-	this->_player = Player(DEFAULT_PLAYER_HEALTH, Point(DEFAULT_POSITION_X, DEFAULT_POSITION_Y));
-}
+int Game::_spawnRate = 300;
+
+Game::Game() : _entities(), _bullets(), _gameStatus(DEFAULT_GAME_STATUS), _player(Player(DEFAULT_PLAYER_HEALTH, Point(DEFAULT_POSITION_X, DEFAULT_POSITION_Y))), _score(0), _screenHeight(BATTLE_HEIGHT), _screenWidth(SCREEN_WIDTH) {}
 
 Game::~Game() {
 	for (auto entity : this->_entities) {
 		delete entity;
 	}
+	for (auto bullet : this->_bullets) {
+		delete bullet;
+	}
 }
 
 void	Game::init( void ) {
-	this->addEntity(new BaseEntity(1, Point(1, 1)));
-	this->addEntity(new BaseEntity(2, Point(1, 3)));
-	this->addEntity(new BaseEntity(3, Point(1, 5)));
-	this->addEntity(new BaseEntity(4, Point(1, 7)));
-	this->addEntity(new BaseEntity(5, Point(1, 9)));
+	for (int i = 0; i < 10; ++i) {
+		this->spawnEntity();
+	}
 }
 
 void	Game::keyPressed( int key ) {
 	if (key == KEY_UP) {
-		if (this->_player.getPosition().getY() - PLAYER_SPEED > STATS_HEIGHT) {
-			this->_player.goUp(PLAYER_SPEED);
-		}
+		this->_player.goUp(PLAYER_SPEED);
 	} else if (key == KEY_DOWN) {
-		if (this->_player.getPosition().getY() + PLAYER_SPEED < STATS_HEIGHT + BATTLE_HEIGHT - 1) {
-			this->_player.goDown(PLAYER_SPEED);
-		}
+		this->_player.goDown(PLAYER_SPEED);
 	} else if (key == KEY_LEFT) {
-		if (this->_player.getPosition().getX() - PLAYER_SPEED > 0) {
-			this->_player.goLeft(PLAYER_SPEED);
-		}
+		this->_player.goLeft(PLAYER_SPEED);
 	} else if (key == KEY_RIGHT) {
-		if (this->_player.getPosition().getX() + PLAYER_SPEED < SCREEN_WIDTH - 1) {
-			this->_player.goRight(PLAYER_SPEED);
-		}
+		this->_player.goRight(PLAYER_SPEED);
 	} else if (key == 'q' || key == 27) {
 		this->setGameStatus(ABORTED);
+	} else if (key == ' ') {
+		this->_player.shoot();
 	}
-	// } else {
-	// 	std::cout << "Key pressed: " << key << " ignored at the time" << std::endl;
-	// }
 }
 
-void	Game::updateAll( void ) {
+void	Game::updateAll( size_t frame ) {
+
+	this->_player.refreshBullets(frame);
 	for (auto entity : this->_entities) {
 		if (entity->getPosition().getY() > BATTLE_HEIGHT - 1) {
 			this->setGameStatus(LOST);
 			break ;
 		}
-		entity->setPosition(Point(entity->getPosition().getY() + 1, entity->getPosition().getX()));
+		entity->move(frame);
 	}
-	// update projectiles...
-	// check if player-projectiles hit enemies
-	// check if enemy-projectiles hit player
+	bool bulletHit = false;
+	for (auto bullet : this->_player.getBullets()) {
+		for (size_t i = 0; i < this->_entities.size(); i++) {
+			if (bullet->getPosition() == this->_entities[i]->getPosition()){
+				auto entity = this->_entities[i];
+				this->_entities.erase(this->_entities.begin() + i);
+				i--;
+				delete entity;
+				this->_score += 10;
+				bulletHit = true;
+				// break ;
+			}
+		}
+		if (bulletHit) {
+			bullet->setPosition(Point(0, 0));
+			bulletHit = false;
+		}
+	}
+	for (auto entity : this->_entities) {
+		if (entity->getPosition() == this->_player.getPosition()) {
+			this->setGameStatus(LOST);
+			break ;
+		}
+	}
+	if (frame % 100 == 0) {
+		Game::_spawnRate -= 10;
+		if (Game::_spawnRate < 100) {
+			Game::_spawnRate = 100;
+		}
+	}
+	if (frame % Game::_spawnRate == 0) {
+		this->spawnEntity();
+	}
+
+	// check if EnemyBurger-projectiles hit player
 	// check if projectiles hit projectiles
 }
 
-void	Game::drawBattle( void ) const {
+void	Game::spawnEntity( void ) {
+	static int rand = time(NULL);
+	rand = rand % (SCREEN_WIDTH - 2) + 1;
+	this->addEntity(new EnemyBurger(Point(rand % 3 + 1, rand)));
+	rand *= 37;
+}
+
+void	Game::drawBattle( void ) {
 	box(this->_battleWin, '|', '-');
 	for (auto entity : this->_entities) {
-		entity->draw(this->_battleWin);
+		this->drawEntity(entity);
 	}
-	this->_player.draw(this->_battleWin);
+	this->drawEntity(&(this->_player));
+	for (auto bullet : this->_player.getBullets()) {
+		this->drawEntity(bullet);
+	}
 	wrefresh(this->_battleWin);
 }
 
-void	Game::drawStats( void ) const {
+void	Game::drawStats( void ) {
 	box(this->_statsWin, '|', '-');
 	mvwprintw(this->_statsWin, 2, 1, "Score: %d", this->_score);
 	mvwprintw(this->_statsWin, 3, 1, "Health: %d", this->_player.getHealth());
 	wrefresh(this->_statsWin);
 }
 
-void Game::printEntities( void ) const {
-	for (auto entity : this->_entities) {
-		std::cout << *entity << std::endl;
-	}
+void Game::drawEntity( BaseEntity *entity ) {
+	mvwprintw(this->getBattleWin(), entity->getPosition().getY(), entity->getPosition().getX(), "%s", entity->getSkin().c_str());	// TODO does not get printed right
 }
 
 void Game::addEntity( BaseEntity *entity ) {

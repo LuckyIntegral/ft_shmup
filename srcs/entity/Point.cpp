@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:55:02 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 17:04:29 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:21:26 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@ void Point::setY( const int y ) {
 
 int Point::getY( void ) const {
 	return (this->_y);
+}
+
+bool	Point::operator==( const Point &other ) {
+	return (this->_y == other._y && this->_x == other._x);
 }
 
 Point &Point::operator=( const Point &other ) {

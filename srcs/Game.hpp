@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 17:35:06 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/13 23:20:32 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 
 # define DEFAULT_GAME_STATUS PLAYING
 # define DEFAULT_IS_WON false
-# define SCREEN_WIDTH 20
-# define STATS_HEIGHT 5
-# define BATTLE_HEIGHT 15
+# define SCREEN_WIDTH 50
+# define STATS_HEIGHT 8
+# define BATTLE_HEIGHT 30
 # define DEFAULT_PLAYER_HEALTH 3
 # define DEFAULT_POSITION_Y (BATTLE_HEIGHT - 1)
 # define DEFAULT_POSITION_X (SCREEN_WIDTH / 2)
@@ -50,6 +50,7 @@ typedef enum eGameStatus {
 class Game {
 protected:
 	std::vector<BaseEntity *>	_entities;
+	std::vector<BaseEntity *>	_bullets;
 	GameStatus			_gameStatus;
 
 	Player				_player;
@@ -62,6 +63,8 @@ protected:
 	int					_screenHeight;
 	int					_screenWidth;
 
+	static int			_spawnRate;
+
 public:
 	Game();
 	~Game();
@@ -70,10 +73,11 @@ public:
 	void				run( void );
 	void				init( void );
 	void				keyPressed( int key );
-	void				updateAll( void );
-	void				drawBattle( void ) const;
-	void				drawStats( void ) const;
-	void				printEntities( void ) const;
+	void				updateAll( size_t frame );
+	void				drawBattle( void );
+	void				drawStats( void );
+	void				spawnEntity( void );
+	void				drawEntity(  BaseEntity *entity  );
 	void				addEntity( BaseEntity *entity );
 
 	// Getters and setters
