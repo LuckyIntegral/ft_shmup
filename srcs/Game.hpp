@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 13:11:52 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 14:39:07 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ public:
 	// Methods
 	int				init( void );
 	void			run( void );
+	void			pauseGame( void );
 	void			drawEnd( void );
 	void			destroy( void );
 	void			keyPressed( int key );
