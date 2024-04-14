@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Point.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 21:55:02 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 22:00:35 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:35:19 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #ifndef POINT_HPP
 # define POINT_HPP
 
-# include <string>
+# include <iostream>
 
 # define DEFAULT_Y 0
 # define DEFAULT_X 0

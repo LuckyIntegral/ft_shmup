@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Player.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:09:10 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 22:54:14 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:35:44 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 
 # include <vector>
 
-# include "Bullet.hpp"
-# include "BaseEntity.hpp"
+# include "../utils/Bullet.hpp"
+# include "../utils/BaseEntity.hpp"
 
 # define PLAYER_BULLET_SPEED 4
 

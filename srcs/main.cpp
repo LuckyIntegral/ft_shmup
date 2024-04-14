@@ -40,6 +40,7 @@ void	Game::run( void ) {
 
 		this->keyPressed(getch()); // TODO add multiple keypresses
 		this->updateAll(steps);
+		this->drawStats();
 		this->drawBattle();
 		//wrefresh(this->getBattleWin());
 		usleep(10000);// repace this with some other way to control time

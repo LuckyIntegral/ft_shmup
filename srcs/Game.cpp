@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Game.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 23:38:09 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:42:12 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Game.hpp"
-#include "entity/BaseEntity.hpp"
-#include "entity/EnemyBurger.hpp"
-
-#include <cstddef>
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
-#include <ncurses.h>
 
 int Game::_spawnRate = 300;
 
@@ -75,7 +67,6 @@ void	Game::updateAll( size_t frame ) {
 				delete entity;
 				this->_score += 10;
 				bulletHit = true;
-				// break ;
 			}
 		}
 		if (bulletHit) {
@@ -106,7 +97,21 @@ void	Game::updateAll( size_t frame ) {
 void	Game::spawnEntity( void ) {
 	static int rand = time(NULL);
 	rand = rand % (SCREEN_WIDTH - 2) + 1;
-	this->addEntity(new EnemyBurger(Point(rand % 3 + 1, rand)));
+
+	BaseEntity *entity = nullptr;
+	if (rand % 6 == 0)
+		entity = new EnemyPizza(Point(rand % 3 + 1, rand));
+	else if (rand % 6 == 1)
+		entity = new EnemyFries(Point(rand % 3 + 1, rand));
+	else if (rand % 6 == 2)
+		entity = new EnemyHotDog(Point(rand % 3 + 1, rand));
+	else if (rand % 6 == 3)
+		entity = new EnemyBurger(Point(rand % 3 + 1, rand));
+	else if (rand % 6 == 4)
+		entity = new EnemyLolipop(Point(rand % 3 + 1, rand));
+	else
+		entity = new EnemyPizza(Point(rand % 3 + 1, rand));
+	this->_entities.push_back(entity);
 	rand *= 37;
 }
 

@@ -1,40 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   EnemyBurger.cpp                                          :+:      :+:    :+:   */
+/*   EnemyLolipop.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/12 22:08:25 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 19:40:36 by tkasbari         ###   ########.fr       */
+/*   Created: 2024/04/14 01:20:52 by vfrants           #+#    #+#             */
+/*   Updated: 2024/04/14 02:06:17 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "EnemyBurger.hpp"
-#include "BaseEntity.hpp"
 
-#include <iostream>
+#include "EnemyLolipop.hpp"
 
-EnemyBurger::EnemyBurger() : BaseEntity() {}
-EnemyBurger::EnemyBurger( Point position ) : BaseEntity(BURGER_HEALTH, position, BURGER_SKIN, BURGER_SPEED) {}
-EnemyBurger::EnemyBurger( const EnemyBurger &other ) : BaseEntity(other) {}
-EnemyBurger::~EnemyBurger() {}
+EnemyLolipop::EnemyLolipop() : AEnemy() {}
+EnemyLolipop::EnemyLolipop( Point position ) : AEnemy(LOLI_POP_HEALTH, position, LOLI_POP_SKIN, LOLI_POP_SPEED) {}
+EnemyLolipop::EnemyLolipop( const EnemyLolipop &other ) : AEnemy(other) {}
+EnemyLolipop::~EnemyLolipop() {}
 
-void	EnemyBurger::move( size_t frame ) {
+void	EnemyLolipop::move( size_t frame ) {
 	if (frame % this->_speed == 0) {
 		this->setPosition(Point(this->getPosition().getY() + 1, this->getPosition().getX()));
 	}
 }
 
-EnemyBurger &EnemyBurger::operator=( const EnemyBurger &other ) {
+void	EnemyLolipop::shoot( size_t frame ) {
+	if (frame % LOLI_POP_BULLET_RATE == 0) {
+		// shoot
+	}
+}
+
+EnemyLolipop &EnemyLolipop::operator=( const EnemyLolipop &other ) {
 	this->_health = other.getHealth();
 	this->_position = other.getPosition();
 	this->_speed = other._speed;
 	return (*this);
 }
 
-std::ostream	&operator<<( std::ostream &stream, const EnemyBurger &instance ) {
-	stream << "{EnemyBurger:"
+std::ostream	&operator<<( std::ostream &stream, const EnemyLolipop &instance ) {
+	stream << "{EnemyLolipop:"
 		<< "speed=" << instance.getSpeed()
 		<< ",health=" << instance.getHealth()
 		<< ",position=" << instance.getPosition()

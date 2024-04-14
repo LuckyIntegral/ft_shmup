@@ -3,22 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   BaseEntity.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:07:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 20:51:27 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:35:01 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <cstddef>
 #ifndef BASE_ENTITY_HPP
 # define BASE_ENTITY_HPP
 
 
-# include "Point.hpp"
+# include <cstddef>
 # include <ncurses.h>
+
+# include "Point.hpp"
 
 # define DEFAULT_HEALTH 1
 # define DEFAULT_POSITION Point(DEFAULT_X, DEFAULT_Y)

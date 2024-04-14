@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 23:20:32 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:45:34 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,24 @@
 
 # include <vector>
 # include <ncurses.h>
+# include <cstddef>
+# include <cstdlib>
+# include <ctime>
+# include <iostream>
+# include <ncurses.h>
 
-# include "entity/Player.hpp"
-# include "entity/BaseEntity.hpp"
+# include "entity/player/Player.hpp"
+# include "entity/utils/BaseEntity.hpp"
+# include "entity/enemy/EnemyBurger.hpp"
+# include "entity/enemy/EnemyFries.hpp"
+# include "entity/enemy/EnemyHotDog.hpp"
+# include "entity/enemy/EnemyLolipop.hpp"
+# include "entity/enemy/EnemyPizza.hpp"
 
 # define DEFAULT_GAME_STATUS PLAYING
 # define DEFAULT_IS_WON false
 # define SCREEN_WIDTH 50
-# define STATS_HEIGHT 8
+# define STATS_HEIGHT 5
 # define BATTLE_HEIGHT 30
 # define DEFAULT_PLAYER_HEALTH 3
 # define DEFAULT_POSITION_Y (BATTLE_HEIGHT - 1)

@@ -11,11 +11,17 @@ MAKEFLAGS	= -j$(nproc) --no-print-directory
 NAME		= ft_shmup
 SRCSDIR		= srcs
 SRCS		= \
-			${SRCSDIR}/entity/BaseEntity.cpp \
-			${SRCSDIR}/entity/EnemyBurger.cpp \
-			${SRCSDIR}/entity/Player.cpp \
-			${SRCSDIR}/entity/Point.cpp \
-			${SRCSDIR}/entity/Bullet.cpp \
+			${SRCSDIR}/entity/utils/BaseEntity.cpp \
+			${SRCSDIR}/entity/utils/Point.cpp \
+			${SRCSDIR}/entity/utils/Bullet.cpp \
+			${SRCSDIR}/entity/player/Player.cpp \
+			${SRCSDIR}/entity/enemy/AEnemy.cpp \
+			${SRCSDIR}/entity/enemy/EnemyBurger.cpp \
+			${SRCSDIR}/entity/enemy/EnemyFries.cpp \
+			${SRCSDIR}/entity/enemy/EnemyLolipop.cpp \
+			${SRCSDIR}/entity/enemy/EnemyHotDog.cpp \
+			${SRCSDIR}/entity/enemy/EnemyIceCream.cpp \
+			${SRCSDIR}/entity/enemy/EnemyPizza.cpp \
 			${SRCSDIR}/Game.cpp \
 			${SRCSDIR}/main.cpp
 

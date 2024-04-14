@@ -3,20 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Player.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:09:10 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 22:29:45 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 01:38:41 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Game.hpp"
+#include "../../Game.hpp"
 #include "Player.hpp"
 
 #include <algorithm>
 #include <iostream>
 #include <ncurses.h>
-#include <new>
 
 Player::Player() : _bullets() {}
 Player::Player( int health, Point position ) : BaseEntity(health, position, "P", 1), _bullets() {}

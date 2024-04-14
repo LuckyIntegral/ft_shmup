@@ -16,13 +16,16 @@
 # define ENEMY_BURGER_HPP
 
 
-# include "BaseEntity.hpp"
+# include "AEnemy.hpp"
 
 # define BURGER_SKIN "B"
 # define BURGER_SPEED 100
 # define BURGER_HEALTH 1
+# define BURGER_BULLET_RATE 100
+# define BURGER_BULLET_SPEED 200
 
-class EnemyBurger : public BaseEntity {
+
+class EnemyBurger : public AEnemy {
 public:
 	EnemyBurger();
 	EnemyBurger( Point position );
@@ -30,6 +33,7 @@ public:
 	~EnemyBurger();
 
 	void	move( size_t frame );
+	void	shoot( size_t frame );
 
 	EnemyBurger &operator=( const EnemyBurger &other );
 };
