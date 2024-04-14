@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 21:34:38 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 23:26:17 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define DEFAULT_GAME_STATUS PLAYING
 # define DEFAULT_IS_WON false
 # define SCREEN_WIDTH 50
-# define STATS_HEIGHT 5
+# define STATS_HEIGHT 6
 # define BATTLE_HEIGHT 30
 # define DEFAULT_PLAYER_HEALTH 3
 # define DEFAULT_POSITION_Y (BATTLE_HEIGHT - 1)
@@ -73,7 +73,9 @@ protected:
 	int					_screenHeight;
 	int					_screenWidth;
 
-	static int			_spawnRate;
+	std::vector<std::string>	_background;
+	static int					_spawnRate;
+
 
 public:
 	Game();
@@ -92,6 +94,7 @@ public:
 	void			spawnEntity( void );
 	void			drawEntity(  BaseEntity *entity  );
 	void			addEnemy( Enemy *entity );
+	void			updateMap( size_t frame );
 
 	void 			refreshBullets( int frame );
 	void			shootRandom( int frame );

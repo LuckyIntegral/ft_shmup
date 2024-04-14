@@ -3,23 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   Game.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 22:25:24 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 23:25:19 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Game.hpp"
 #include "entity/enemy/EnemyFactory.hpp"
+#include <cstdlib>
 #include <ncurses.h>
+#include <string>
 
 extern int 	sigResize;
 
 int Game::_spawnRate = 300;
 
-Game::Game() : _enemies(), _bullets(), _gameStatus(DEFAULT_GAME_STATUS), _player(Player(DEFAULT_PLAYER_HEALTH, Point(DEFAULT_POSITION_X, DEFAULT_POSITION_Y))), _score(0), _screenHeight(BATTLE_HEIGHT), _screenWidth(SCREEN_WIDTH) {}
+Game::Game() : _enemies(), _bullets(), _gameStatus(DEFAULT_GAME_STATUS), _player(Player(DEFAULT_PLAYER_HEALTH, Point(DEFAULT_POSITION_X, DEFAULT_POSITION_Y))), _score(0), _screenHeight(BATTLE_HEIGHT), _screenWidth(SCREEN_WIDTH), _background() {
+	this->_background = {
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |",
+		"                                                 |"
+	};
+	for (int i = 0; i < 50; i++) {
+		this->updateMap(20);
+	}
+}
 
 Game::~Game() {
 	for (auto entity : this->_enemies) {
@@ -159,7 +195,21 @@ void	Game::checkBulletVsPlayer( void ) {
 	}
 }
 
+void	Game::updateMap( size_t frame ) {
+	std::string line(SCREEN_WIDTH, ' ');
+
+	for (int i = 0; i < 2; i++) {
+		line[rand() % (SCREEN_WIDTH / 2) * 2 + 1] = '.';
+	}
+
+	if (frame % 20 == 0) {
+		this->_background.pop_back();
+		this->_background.insert(this->_background.begin(), line);
+	}
+}
+
 void	Game::updateAll( size_t frame ) {
+	this->updateMap(frame);
 	this->shootRandom(frame);
 	this->refreshBullets(frame);
 	this->advanceEnemies(frame);
@@ -211,33 +261,22 @@ void	Game::spawnEntity( void ) {
 	rand = (rand * 37 + 15) * 15 % 127;
 }
 
+static std::string	convertString(std::vector<std::string> background) {
+	std::string res = "";
+
+	for (auto str : background) {
+		res += str;
+	}
+	return res;
+}
+
 void	Game::drawBattle( void ) {
-	//init_pair(1, COLOR_BLACK, COLOR_MAGENTA);
-	init_pair(1, COLOR_YELLOW, COLOR_GREEN); // Define color pair for black text on yellow background
-
-    // Create a window
-
-    // Set the background color of the window
+	init_pair(1, COLOR_YELLOW, COLOR_BLACK);
     wbkgd(this->_battleWin, COLOR_PAIR(1));
-
-    // Draw the McDonald's sign
-    mvwaddstr(this->_battleWin, 5, 0,
-	"            🟨             🟨       \n"
-	"          🟨🟨🟨         🟨🟨🟨     \n"
-	"        🟨🟨  🟨🟨     🟨🟨  🟨🟨   \n"
-	"        🟨🟨  🟨🟨     🟨🟨  🟨🟨   \n"
-	"       🟨🟨    🟨🟨   🟨🟨    🟨🟨  \n"
-	"       🟨🟨    🟨🟨   🟨🟨    🟨🟨  \n"
-	"      🟨🟨      🟨🟨 🟨🟨      🟨🟨 \n"
-	"      🟨🟨      🟨🟨 🟨🟨      🟨🟨 \n"
-	"     🟨🟨         🟨🟨          🟨🟨\n"
-	"     🟨🟨         🟨🟨          🟨🟨\n"
-	"     🟨🟨                       🟨🟨\n"
-	"                               \n"
-	"                               ");
+    mvwaddstr(this->_battleWin, 1, 0, convertString(this->_background).c_str());
+	box(this->_battleWin, '|', '-');
 
 	//wbkgd(this->_battleWin, COLOR_PAIR(1));
-	box(this->_battleWin, '|', '-');
 	for (auto entity : this->_enemies) {
 		this->drawEntity(entity);
 	}
@@ -253,16 +292,18 @@ void	Game::drawBattle( void ) {
 
 void	Game::drawStats( size_t frame ) {
 	box(this->_statsWin, '|', '-');
+	init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+    wbkgd(this->_statsWin, COLOR_PAIR(1));
 	wattron(this->_statsWin, A_BOLD);
 	mvwprintw(this->_statsWin, 1, 6, "🍔🍟🌭🍦🍭🍕 ~Food Wars~ 🍕🍭🍦🌭🍟🍔");
-	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 - 6, "Score : %06d", this->_score);
+	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 - 6, "Score: %06d", this->_score);
 	mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 - 6, "Time: %06zu", frame / 100);
-	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 + 10, "Health: ");
+	mvwprintw(this->_statsWin, 4, SCREEN_WIDTH / 2 - 6, "Health: ");
 	for (int i = 0; i < DEFAULT_PLAYER_HEALTH; i++) {
 		if (i < this->_player.getHealth())
-			mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 + 18 + (i * 2), "❤️");
+			mvwprintw(this->_statsWin, 4, SCREEN_WIDTH / 2 + 2 + (i * 2), "❤️");
 		else
-			mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 + 18 + (i * 2), "  ");
+			mvwprintw(this->_statsWin, 4, SCREEN_WIDTH / 2 + 2 + (i * 2), "  ");
 	}
 	wattroff(this->_statsWin, A_BOLD);
 	wrefresh(this->_statsWin);
