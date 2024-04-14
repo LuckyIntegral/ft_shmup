@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 13:11:52 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 16:18:09 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,9 @@ public:
 	WINDOW			*getBattleWin( void ) const;
 	void			setBattleWin( WINDOW *battleWin );
 
+	class WrongWindowSizeException : public std::exception {
+		virtual const char *what() const throw();
+	};
 };
 
 

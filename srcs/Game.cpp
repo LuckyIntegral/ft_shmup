@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 13:29:35 by tkasbari         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/04/14 16:18:39 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "Game.hpp"
 
@@ -229,4 +230,8 @@ WINDOW *Game::getBattleWin( void ) const {
 
 void Game::setBattleWin( WINDOW *battleWin ) {
 	this->_battleWin = battleWin;
+}
+
+const char *Game::WrongWindowSizeException::what() const throw() {
+	return ("Window size is too small");
 }
