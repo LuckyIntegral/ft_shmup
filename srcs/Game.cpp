@@ -3,22 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   Game.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 19:02:43 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 20:49:50 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Game.hpp"
+#include "entity/enemy/EnemyFactory.hpp"
+#include <ncurses.h>
 
 int Game::_spawnRate = 300;
 
-Game::Game() : _entities(), _bullets(), _gameStatus(DEFAULT_GAME_STATUS), _player(Player(DEFAULT_PLAYER_HEALTH, Point(DEFAULT_POSITION_X, DEFAULT_POSITION_Y))), _score(0), _screenHeight(BATTLE_HEIGHT), _screenWidth(SCREEN_WIDTH) {}
+Game::Game() : _enemies(), _bullets(), _gameStatus(DEFAULT_GAME_STATUS), _player(Player(DEFAULT_PLAYER_HEALTH, Point(DEFAULT_POSITION_X, DEFAULT_POSITION_Y))), _score(0), _screenHeight(BATTLE_HEIGHT), _screenWidth(SCREEN_WIDTH) {}
 
 Game::~Game() {
-	for (auto entity : this->_entities) {
+	for (auto entity : this->_enemies) {
 		delete entity;
 	}
 	for (auto bullet : this->_bullets) {
@@ -111,7 +113,8 @@ void	Game::keyPressed( int key ) {
 }
 
 void	Game::advanceEnemies( size_t frame ) {
-	for (auto entity : this->_entities) {
+	this->_player.refreshBullets(frame);
+	for (auto entity : this->_enemies) {
 		if (entity->getPosition().getY() > (BATTLE_HEIGHT - 3)) {
 			this->setGameStatus(OVER);
 			break ;
@@ -123,13 +126,9 @@ void	Game::advanceEnemies( size_t frame ) {
 void	Game::checkBulletVsEnemy( void ) {
 	bool bulletHit = false;
 	for (auto bullet : this->_player.getBullets()) {
-		for (size_t i = 0; i < this->_entities.size(); i++) {
-			if (bullet->getPosition() == this->_entities[i]->getPosition()){
-				auto entity = this->_entities[i];
-				this->_entities.erase(this->_entities.begin() + i);
-				i--;
-				delete entity;
-				this->_score += 10;
+		for (size_t i = 0; i < this->_enemies.size(); i++) {
+			if (bullet->getPosition() == this->_enemies[i]->getPosition()){
+				this->_enemies[i]->setHealth(this->_enemies[i]->getHealth() - 1);
 				bulletHit = true;
 			}
 		}
@@ -147,22 +146,28 @@ void	Game::checkBulletVsPlayer( void ) {
 			if (this->_player.getHealth() == 0) {
 				this->setGameStatus(OVER);
 			}
-			bullet->setPosition(Point(0, 0));
+			bullet->setPosition(Point(BATTLE_HEIGHT, 0));
 		}
 	}
 }
 
 void	Game::updateAll( size_t frame ) {
 	this->shootRandom(frame);
-	this->_player.refreshBullets(frame);
 	this->refreshBullets(frame);
 	this->advanceEnemies(frame);
 	this->checkBulletVsEnemy();
 	this->checkBulletVsPlayer();
-	for (auto entity : this->_entities) {
+	for (auto entity : this->_enemies) {
 		if (entity->getPosition() == this->_player.getPosition()) {
 			this->setGameStatus(OVER);
 			break ;
+		}
+	}
+	for (size_t i = 0; i < this->_enemies.size(); i++) {
+		if (this->_enemies[i]->getHealth() <= 0) {
+			this->_score += this->_enemies[i]->getScorePoints();
+			delete this->_enemies[i];
+			this->_enemies.erase(this->_enemies.begin() + i);
 		}
 	}
 	if (frame % 100 == 0) {
@@ -180,27 +185,27 @@ void	Game::updateAll( size_t frame ) {
 void	Game::spawnEntity( void ) {
 	static int rand = time(NULL) % 27;
 
-	BaseEntity *entity = nullptr;
+	Enemy *enemy = nullptr;
 	Point position(rand % 3 + 1, (rand % (SCREEN_WIDTH / 2 - 1) * 2) + 1);
 	if (rand % 6 == 0)
-		entity = new EnemyPizza(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::FRIES, position);
 	else if (rand % 6 == 1)
-		entity = new EnemyFries(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::HOT_DOG, position);
 	else if (rand % 6 == 2)
-		entity = new EnemyHotDog(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::ICE_CREAM, position);
 	else if (rand % 6 == 3)
-		entity = new EnemyBurger(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::BURGER, position);
 	else if (rand % 6 == 4)
-		entity = new EnemyLolipop(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::LOLI_POP, position);
 	else
-		entity = new EnemyPizza(position);
-	this->_entities.push_back(entity);
+		enemy = EnemyFactory::createEnemy(EnemyType::PIZZA, position);
+	this->_enemies.push_back(enemy);
 	rand = (rand * 37 + 15) * 15 % 127;
 }
 
 void	Game::drawBattle( void ) {
 	box(this->_battleWin, '|', '-');
-	for (auto entity : this->_entities) {
+	for (auto entity : this->_enemies) {
 		this->drawEntity(entity);
 	}
 	this->drawEntity(&(this->_player));
@@ -232,8 +237,8 @@ void Game::drawEntity( BaseEntity *entity ) {
 		entity->getPosition().getX(), "%s", entity->getSkin().c_str());
 }
 
-void Game::addEntity( BaseEntity *entity ) {
-	this->_entities.push_back(entity);
+void Game::addEnemy( Enemy *entity ) {
+	this->_enemies.push_back(entity);
 }
 
 GameStatus Game::getGameStatus( void ) const {
@@ -275,8 +280,6 @@ std::vector<Bullet *>	Game::getBullets( void ) {
 void 	Game::refreshBullets( int frame ) {
 	for (auto bullet : this->_bullets) {
 		bullet->move(frame);
-	}
-	for (auto bullet : this->_bullets) {
 		if (bullet->getPosition().getY() >= BATTLE_HEIGHT) {
 			auto bulletIt = std::find(this->_bullets.begin(), this->_bullets.end(), bullet);
 			delete *bulletIt;
@@ -288,8 +291,10 @@ void 	Game::refreshBullets( int frame ) {
 void	Game::shootRandom( int frame ) {
 	if (frame % 100 == 0) {
 		int rand = time(NULL);
-		rand = rand % this->_entities.size();
-		this->_bullets.push_back(new Bullet(this->_entities[rand]->getPosition(), t_bulletType::ENEMY, ENEMY_BULLET_SKIN, ENEMY_BULLET_SPEED));
+		if (this->_enemies.size() == 0)
+			return ;
+		rand = rand % this->_enemies.size();
+		this->_bullets.push_back(new Bullet(this->_enemies[rand]->getPosition(), t_bulletType::ENEMY, ENEMY_BULLET_SKIN, ENEMY_BULLET_SPEED));
 	}
 }
 
