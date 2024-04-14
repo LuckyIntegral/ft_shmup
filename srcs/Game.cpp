@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 20:49:50 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 22:25:24 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "Game.hpp"
 #include "entity/enemy/EnemyFactory.hpp"
 #include <ncurses.h>
+
+extern int 	sigResize;
 
 int Game::_spawnRate = 300;
 
@@ -38,6 +40,8 @@ void	Game::init( void ) {
 	noecho(); 				// for ncurses, don't echo any keypresses
 	keypad(stdscr, TRUE); 	// for ncurses, enable special keys
 	timeout(0); 			// Set timeout for getch to non-blocking mode
+	start_color();
+	init_pair(1, COLOR_RED, COLOR_BLACK);
 	getmaxyx(this->getMainWin(), max_y, max_x);
 	if (max_y < (BATTLE_HEIGHT + STATS_HEIGHT) || max_x < SCREEN_WIDTH) {
 		endwin();
@@ -68,21 +72,25 @@ void	Game::drawEnd( void ) {
 	WINDOW *endWindow;
 	int	winHeight, winWidth;
 
-	start_color();
-    init_pair(1, COLOR_RED, COLOR_BLACK);
     winHeight = (BATTLE_HEIGHT + STATS_HEIGHT - 5) / 2;
-    winWidth = (SCREEN_WIDTH - 20) / 2;
-	endWindow = newwin(5, 20, winHeight, winWidth);
+    winWidth = (SCREEN_WIDTH - 21) / 2;
+	endWindow = newwin(5, 21, winHeight, winWidth);
+	init_pair(1, COLOR_RED, COLOR_BLACK);
 	wbkgd(endWindow, COLOR_PAIR(1));
     wattron(endWindow, A_BOLD);
 	if (this->_gameStatus == ABORTED)
 		mvwprintw(endWindow, 2, 3, "Game aborted\n");
 	else if (this->_gameStatus == OVER)
 		mvwprintw(endWindow, 2, 5, "Game over.\n");
-    wattroff(endWindow, COLOR_PAIR(2));
+	else if (sigResize == 1)
+		mvwprintw(endWindow, 1, 0,
+			"Window resizing not\n"
+			"supported. Please\n"
+			"restart the game.");
+	wattroff(endWindow, COLOR_PAIR(1));
     wattroff(endWindow, A_BOLD);
 	wrefresh(endWindow);
-	usleep(3000000);
+	usleep(2000000);
 	timeout(-1);
 	getch();
 	delwin(endWindow);
@@ -204,6 +212,31 @@ void	Game::spawnEntity( void ) {
 }
 
 void	Game::drawBattle( void ) {
+	//init_pair(1, COLOR_BLACK, COLOR_MAGENTA);
+	init_pair(1, COLOR_YELLOW, COLOR_GREEN); // Define color pair for black text on yellow background
+
+    // Create a window
+
+    // Set the background color of the window
+    wbkgd(this->_battleWin, COLOR_PAIR(1));
+
+    // Draw the McDonald's sign
+    mvwaddstr(this->_battleWin, 5, 0,
+	"            🟨             🟨       \n"
+	"          🟨🟨🟨         🟨🟨🟨     \n"
+	"        🟨🟨  🟨🟨     🟨🟨  🟨🟨   \n"
+	"        🟨🟨  🟨🟨     🟨🟨  🟨🟨   \n"
+	"       🟨🟨    🟨🟨   🟨🟨    🟨🟨  \n"
+	"       🟨🟨    🟨🟨   🟨🟨    🟨🟨  \n"
+	"      🟨🟨      🟨🟨 🟨🟨      🟨🟨 \n"
+	"      🟨🟨      🟨🟨 🟨🟨      🟨🟨 \n"
+	"     🟨🟨         🟨🟨          🟨🟨\n"
+	"     🟨🟨         🟨🟨          🟨🟨\n"
+	"     🟨🟨                       🟨🟨\n"
+	"                               \n"
+	"                               ");
+
+	//wbkgd(this->_battleWin, COLOR_PAIR(1));
 	box(this->_battleWin, '|', '-');
 	for (auto entity : this->_enemies) {
 		this->drawEntity(entity);
@@ -218,17 +251,20 @@ void	Game::drawBattle( void ) {
 	wrefresh(this->_battleWin);
 }
 
-void	Game::drawStats( void ) {
+void	Game::drawStats( size_t frame ) {
 	box(this->_statsWin, '|', '-');
-	mvwprintw(this->_statsWin, 1, 6, "🍔🍟🌭🍦🍭🍕 Eat em up! 🍕🍭🍦🌭🍟🍔");
-	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 - 6, "Score : %05d", this->_score);
-	mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 - 6, "Health: ");
+	wattron(this->_statsWin, A_BOLD);
+	mvwprintw(this->_statsWin, 1, 6, "🍔🍟🌭🍦🍭🍕 ~Food Wars~ 🍕🍭🍦🌭🍟🍔");
+	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 - 6, "Score : %06d", this->_score);
+	mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 - 6, "Time: %06zu", frame / 100);
+	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 + 10, "Health: ");
 	for (int i = 0; i < DEFAULT_PLAYER_HEALTH; i++) {
 		if (i < this->_player.getHealth())
-			mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "❤️");
+			mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 + 18 + (i * 2), "❤️");
 		else
-			mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "  ");
+			mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 + 18 + (i * 2), "  ");
 	}
+	wattroff(this->_statsWin, A_BOLD);
 	wrefresh(this->_statsWin);
 }
 
@@ -299,5 +335,5 @@ void	Game::shootRandom( int frame ) {
 }
 
 const char *Game::WrongWindowSizeException::what() const throw() {
-	return ("Window size is too small");
+	return ("Window size is too small (min 50*35)");
 }
