@@ -83,6 +83,7 @@ public:
 	// Methods
 	void			init( void );
 	void			run( void );
+	void			pauseGame( void );
 	void			drawEnd( void );
 	void			destroy( void );
 	void			keyPressed( int key );

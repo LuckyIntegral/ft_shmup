@@ -15,8 +15,8 @@ void	Game::run( void ) {
 	this->drawBattle();
 	usleep(1000000);
 	while (this->_gameStatus == PLAYING) {
-		werase(this->getBattleWin());
 		this->keyPressed(getch());
+		werase(this->getBattleWin());
 		this->updateAll(steps);
 		this->drawStats();
 		this->drawBattle();
