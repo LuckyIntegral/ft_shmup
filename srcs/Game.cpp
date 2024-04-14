@@ -65,36 +65,27 @@ void	Game::pauseGame( void ) {
 }
 
 void	Game::drawEnd( void ) {
+	WINDOW *endWindow;
+	int	winHeight, winWidth;
+
 	start_color();
-    // Initialize colors
-    init_pair(1, COLOR_RED, COLOR_BLACK); // Define color pair for red text on black background
-    init_pair(2, COLOR_WHITE, COLOR_RED); // Define color pair for white text on red background
-
-    // Create a window
-    int height = 5;
-    int width = 20;
-    int y = (BATTLE_HEIGHT + STATS_HEIGHT - height) / 2; // Center vertically
-    int x = (SCREEN_WIDTH - width) / 2;   // Center horizontally
-    WINDOW *win = newwin(height, width, y, x);
-
-    box(win, 0, 0);
-    // Set color attributes
-    wattron(win, COLOR_PAIR(2)); // White text on red background
-    wattron(win, A_BOLD);        // Bold text
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    winHeight = (BATTLE_HEIGHT + STATS_HEIGHT - 5) / 2;
+    winWidth = (SCREEN_WIDTH - 20) / 2;
+	endWindow = newwin(5, 20, winHeight, winWidth);
+	wbkgd(endWindow, COLOR_PAIR(1));
+    wattron(endWindow, A_BOLD);
 	if (this->_gameStatus == ABORTED)
-		mvwprintw(win, 2, 2, "Game aborted\n");
-	else if (this->_gameStatus == LOST)
-		mvwprintw(win, 2, 2, "You Lost!\n");
-	else if (this->_gameStatus == WON)
-		mvwprintw(win, 2, 2, "You Won!\n");
-    // Turn off color attributes
-    wattroff(win, COLOR_PAIR(2));
-    wattroff(win, A_BOLD);
-
-    // Refresh the window
-    wrefresh(win);
+		mvwprintw(endWindow, 2, 3, "Game aborted\n");
+	else if (this->_gameStatus == OVER)
+		mvwprintw(endWindow, 2, 5, "Game over.\n");
+    wattroff(endWindow, COLOR_PAIR(2));
+    wattroff(endWindow, A_BOLD);
+	wrefresh(endWindow);
+	usleep(3000000);
 	timeout(-1);
 	getch();
+	delwin(endWindow);
 }
 
 void	Game::destroy( void ) {
@@ -125,7 +116,7 @@ void	Game::advanceEnemies( size_t frame ) {
 	this->_player.refreshBullets(frame);
 	for (auto entity : this->_enemies) {
 		if (entity->getPosition().getY() > (BATTLE_HEIGHT - 3)) {
-			this->setGameStatus(LOST);
+			this->setGameStatus(OVER);
 			break ;
 		}
 		entity->move(frame);
@@ -153,7 +144,7 @@ void	Game::checkBulletVsPlayer( void ) {
 		if (bullet->getPosition() == this->_player.getPosition()){
 			this->_player.setHealth(this->_player.getHealth() - 1);
 			if (this->_player.getHealth() == 0) {
-				this->setGameStatus(LOST);
+				this->setGameStatus(OVER);
 			}
 			bullet->setPosition(Point(BATTLE_HEIGHT, 0));
 		}
@@ -168,7 +159,7 @@ void	Game::updateAll( size_t frame ) {
 	this->checkBulletVsPlayer();
 	for (auto entity : this->_enemies) {
 		if (entity->getPosition() == this->_player.getPosition()) {
-			this->setGameStatus(LOST);
+			this->setGameStatus(OVER);
 			break ;
 		}
 	}

@@ -54,8 +54,7 @@ typedef enum eGameStatus {
 	PLAYING,
 	PAUSED,
 	ABORTED,
-	LOST,
-	WON
+	OVER
 }			GameStatus;
 
 class Game {
