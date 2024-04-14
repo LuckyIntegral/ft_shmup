@@ -6,11 +6,10 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:07:40 by tkasbari          #+#    #+#             */
-/*   Updated: 2024/04/14 15:51:39 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 16:39:06 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
 
 #ifndef BULLET_HPP
 # define BULLET_HPP

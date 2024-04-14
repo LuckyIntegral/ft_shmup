@@ -28,8 +28,12 @@ void	Game::run( void ) {
 int main( void ) {
 	Game game;
 
-	if (game.init() != 0)
+	try {
+		game.init();
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
 		return (1);
+	}
 	game.run();
 	game.drawEnd();
 	game.destroy();

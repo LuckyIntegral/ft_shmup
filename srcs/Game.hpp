@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 15:58:38 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 18:04:40 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ public:
 	~Game();
 
 	// Methods
-	int				init( void );
+	void			init( void );
 	void			run( void );
 	void			pauseGame( void );
 	void			drawEnd( void );
@@ -100,6 +100,9 @@ public:
 
 	void 			refreshBullets( int frame );
 	void			shootRandom( int frame );
+	void			checkBulletVsEnemy( void );
+	void			checkBulletVsPlayer( void );
+	void			advanceEnemies( size_t frame );
 
 	// Getters and setters
 	GameStatus		getGameStatus( void ) const;
@@ -116,6 +119,9 @@ public:
 
 	std::vector<Bullet *>	getBullets( void );
 
+	class WrongWindowSizeException : public std::exception {
+		virtual const char *what() const throw();
+	};
 };
 
 

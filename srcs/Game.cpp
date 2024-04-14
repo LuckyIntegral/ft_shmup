@@ -6,9 +6,10 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 15:52:52 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 18:05:52 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "Game.hpp"
 #include <iostream>
@@ -27,7 +28,7 @@ Game::~Game() {
 	this->_bullets.clear();
 }
 
-int	Game::init( void ) {
+void	Game::init( void ) {
 	int max_x, max_y;
 
 	setlocale(LC_ALL, "");
@@ -35,16 +36,14 @@ int	Game::init( void ) {
 	curs_set(0);
 	noecho(); 				// for ncurses, don't echo any keypresses
 	keypad(stdscr, TRUE); 	// for ncurses, enable special keys
-    timeout(0); 			// Set timeout for getch to non-blocking mode
+	timeout(0); 			// Set timeout for getch to non-blocking mode
 	getmaxyx(this->getMainWin(), max_y, max_x);
 	if (max_y < (BATTLE_HEIGHT + STATS_HEIGHT) || max_x < SCREEN_WIDTH) {
 		endwin();
-		std::cerr << "Terminal too small" << std::endl;
-		return (1);
+		throw WrongWindowSizeException();
 	}
 	this->setStatsWin(subwin(this->getMainWin(), STATS_HEIGHT, SCREEN_WIDTH, 0, 0));
 	this->setBattleWin(subwin(this->getMainWin(), BATTLE_HEIGHT, SCREEN_WIDTH, STATS_HEIGHT, 0));
-	return (0);
 }
 
 void	Game::pauseGame( void ) {
@@ -121,10 +120,7 @@ void	Game::keyPressed( int key ) {
 	}
 }
 
-void	Game::updateAll( size_t frame ) {
-	this->shootRandom(frame);
-	this->_player.refreshBullets(frame);
-	this->refreshBullets(frame);
+void	Game::advanceEnemies( size_t frame ) {
 	for (auto entity : this->_entities) {
 		if (entity->getPosition().getY() > BATTLE_HEIGHT - 1) {
 			this->setGameStatus(LOST);
@@ -132,6 +128,9 @@ void	Game::updateAll( size_t frame ) {
 		}
 		entity->move(frame);
 	}
+}
+
+void	Game::checkBulletVsEnemy( void ) {
 	bool bulletHit = false;
 	for (auto bullet : this->_player.getBullets()) {
 		for (size_t i = 0; i < this->_entities.size(); i++) {
@@ -149,6 +148,32 @@ void	Game::updateAll( size_t frame ) {
 			bulletHit = false;
 		}
 	}
+}
+
+void	Game::checkBulletVsPlayer( void ) {
+	bool bulletHit = false;
+	for (auto bullet : this->getBullets()) {
+		if (bullet->getPosition() == this->_player.getPosition()){
+			this->_player.setHealth(this->_player.getHealth() - 1);
+			if (this->_player.getHealth() == 0) {
+				this->setGameStatus(LOST);
+			}
+			bulletHit = true;
+		}
+		if (bulletHit) {
+			bullet->setPosition(Point(0, 0));
+			bulletHit = false;
+		}
+	}
+}
+
+void	Game::updateAll( size_t frame ) {
+	this->shootRandom(frame);
+	this->_player.refreshBullets(frame);
+	this->refreshBullets(frame);
+	this->advanceEnemies(frame);
+	this->checkBulletVsEnemy();
+	this->checkBulletVsPlayer();
 	for (auto entity : this->_entities) {
 		if (entity->getPosition() == this->_player.getPosition()) {
 			this->setGameStatus(LOST);
@@ -164,8 +189,6 @@ void	Game::updateAll( size_t frame ) {
 	if (frame % Game::_spawnRate == 0) {
 		this->spawnEntity();
 	}
-
-	// check if EnemyBurger-projectiles hit player
 	// check if projectiles hit projectiles
 }
 
@@ -210,14 +233,18 @@ void	Game::drawStats( void ) {
 	mvwprintw(this->_statsWin, 1, 6, "🍔🍟🌭🍦🍭🍕 Eat em up! 🍕🍭🍦🌭🍟🍔");
 	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 - 6, "Score : %05d", this->_score);
 	mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 - 6, "Health: ");
-	for (int i = 0; i < this->_player.getHealth(); i++) {
-		mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "❤️");
+	for (int i = 0; i < DEFAULT_PLAYER_HEALTH; i++) {
+		if (i < this->_player.getHealth())
+			mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "❤️");
+		else
+			mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "  ");
 	}
 	wrefresh(this->_statsWin);
 }
 
 void Game::drawEntity( BaseEntity *entity ) {
-	mvwprintw(this->getBattleWin(), entity->getPosition().getY(), entity->getPosition().getX(), "%s", entity->getSkin().c_str());	// TODO does not get printed right
+	mvwprintw(this->getBattleWin(), entity->getPosition().getY(),
+		entity->getPosition().getX(), "%s", entity->getSkin().c_str());
 }
 
 void Game::addEntity( BaseEntity *entity ) {
@@ -279,4 +306,8 @@ void	Game::shootRandom( int frame ) {
 		rand = rand % this->_entities.size();
 		this->_bullets.push_back(new Bullet(this->_entities[rand]->getPosition(), t_bulletType::ENEMY, ENEMY_BULLET_SKIN, ENEMY_BULLET_SPEED));
 	}
+}
+
+const char *Game::WrongWindowSizeException::what() const throw() {
+	return ("Window size is too small");
 }
