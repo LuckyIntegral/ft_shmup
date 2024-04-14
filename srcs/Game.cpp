@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 13:29:35 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 14:46:32 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,23 @@ int	Game::init( void ) {
 	this->setStatsWin(subwin(this->getMainWin(), STATS_HEIGHT, SCREEN_WIDTH, 0, 0));
 	this->setBattleWin(subwin(this->getMainWin(), BATTLE_HEIGHT, SCREEN_WIDTH, STATS_HEIGHT, 0));
 	return (0);
+}
+
+void	Game::pauseGame( void ) {
+	int key;
+
+	this->setGameStatus(PAUSED);
+	timeout(-1);
+	mvwprintw(this->getBattleWin(), BATTLE_HEIGHT / 2, SCREEN_WIDTH / 2 - 4, "Paused");
+	wrefresh(this->_battleWin);
+	while (this->_gameStatus == PAUSED) {
+		key = getch();
+		if (key == 'p')
+			this->setGameStatus(PLAYING);
+		else if (key == 'q' || key == 27)
+			this->setGameStatus(ABORTED);
+	}
+	timeout(0);
 }
 
 void	Game::drawEnd( void ) {
@@ -95,6 +112,8 @@ void	Game::keyPressed( int key ) {
 		this->_player.goRight(PLAYER_SPEED);
 	} else if (key == 'q' || key == 27) {
 		this->setGameStatus(ABORTED);
+	} else if (key == 'p') {
+		this->pauseGame();
 	} else if (key == ' ') {
 		this->_player.shoot();
 	}
