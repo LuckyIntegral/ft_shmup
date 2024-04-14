@@ -6,7 +6,7 @@
 /*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:07:40 by tkasbari          #+#    #+#             */
-/*   Updated: 2024/04/14 01:34:39 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 19:31:39 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,13 @@
 
 #include <iostream>
 
-Bullet::Bullet() : BaseEntity(DEFAULT_BULLET_HEALTH, Point(0, 0), DEFAULT_BULLET_SKIN, DEFAULT_BULLET_SPEED), _type(t_bulletType::ENEMY) {}
+Bullet::Bullet()
+		: BaseEntity(DEFAULT_BULLET_HEALTH, Point(0, 0), DEFAULT_BULLET_SKIN, DEFAULT_BULLET_SPEED),
+			_type(t_bulletType::ENEMY) {}
 
-Bullet::Bullet( Point position, t_bulletType owner, int speed ) : BaseEntity(DEFAULT_BULLET_HEALTH, position, DEFAULT_BULLET_SKIN, speed), _type(owner) {}
+Bullet::Bullet( Point position, t_bulletType owner, int speed )
+		: BaseEntity(DEFAULT_BULLET_HEALTH, position, DEFAULT_BULLET_SKIN, speed),
+			_type(owner) {}
 
 Bullet::~Bullet() {}
 

@@ -15,13 +15,8 @@ SRCS		= \
 			${SRCSDIR}/entity/utils/Point.cpp \
 			${SRCSDIR}/entity/utils/Bullet.cpp \
 			${SRCSDIR}/entity/player/Player.cpp \
-			${SRCSDIR}/entity/enemy/AEnemy.cpp \
-			${SRCSDIR}/entity/enemy/EnemyBurger.cpp \
-			${SRCSDIR}/entity/enemy/EnemyFries.cpp \
-			${SRCSDIR}/entity/enemy/EnemyLolipop.cpp \
-			${SRCSDIR}/entity/enemy/EnemyHotDog.cpp \
-			${SRCSDIR}/entity/enemy/EnemyIceCream.cpp \
-			${SRCSDIR}/entity/enemy/EnemyPizza.cpp \
+			${SRCSDIR}/entity/enemy/Enemy.cpp \
+			${SRCSDIR}/entity/enemy/EnemyFactory.cpp \
 			${SRCSDIR}/Game.cpp \
 			${SRCSDIR}/main.cpp
 
