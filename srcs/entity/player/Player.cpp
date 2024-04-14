@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Player.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:09:10 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 12:18:41 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 17:02:45 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	Player::goLeft( int steps ) {
 }
 
 void	Player::goRight( int steps ) {
-	if (this->getPosition().getX() + steps >= SCREEN_WIDTH - 1)
+	if (this->getPosition().getX() + steps >= SCREEN_WIDTH - 2)
 		return ;
 	this->setPosition(Point(this->getPosition().getY(), this->getPosition().getX() + steps));
 }
