@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 01:42:12 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 13:29:35 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,63 @@ Game::~Game() {
 	}
 }
 
-void	Game::init( void ) {
-	for (int i = 0; i < 10; ++i) {
-		this->spawnEntity();
+int	Game::init( void ) {
+	int max_x, max_y;
+
+	setlocale(LC_ALL, "");
+	this->setMainWin(initscr());
+	curs_set(0);
+	noecho(); 				// for ncurses, don't echo any keypresses
+	keypad(stdscr, TRUE); 	// for ncurses, enable special keys
+    timeout(0); 			// Set timeout for getch to non-blocking mode
+	getmaxyx(this->getMainWin(), max_y, max_x);
+	if (max_y < (BATTLE_HEIGHT + STATS_HEIGHT) || max_x < SCREEN_WIDTH) {
+		endwin();
+		std::cerr << "Terminal too small" << std::endl;
+		return (1);
 	}
+	this->setStatsWin(subwin(this->getMainWin(), STATS_HEIGHT, SCREEN_WIDTH, 0, 0));
+	this->setBattleWin(subwin(this->getMainWin(), BATTLE_HEIGHT, SCREEN_WIDTH, STATS_HEIGHT, 0));
+	return (0);
+}
+
+void	Game::drawEnd( void ) {
+	start_color();
+    // Initialize colors
+    init_pair(1, COLOR_RED, COLOR_BLACK); // Define color pair for red text on black background
+    init_pair(2, COLOR_WHITE, COLOR_RED); // Define color pair for white text on red background
+
+    // Create a window
+    int height = 5;
+    int width = 20;
+    int y = (BATTLE_HEIGHT + STATS_HEIGHT - height) / 2; // Center vertically
+    int x = (SCREEN_WIDTH - width) / 2;   // Center horizontally
+    WINDOW *win = newwin(height, width, y, x);
+
+    box(win, 0, 0);
+    // Set color attributes
+    wattron(win, COLOR_PAIR(2)); // White text on red background
+    wattron(win, A_BOLD);        // Bold text
+	if (this->_gameStatus == ABORTED)
+		mvwprintw(win, 2, 2, "Game aborted\n");
+	else if (this->_gameStatus == LOST)
+		mvwprintw(win, 2, 2, "You Lost!\n");
+	else if (this->_gameStatus == WON)
+		mvwprintw(win, 2, 2, "You Won!\n");
+    // Turn off color attributes
+    wattroff(win, COLOR_PAIR(2));
+    wattroff(win, A_BOLD);
+
+    // Refresh the window
+    wrefresh(win);
+	timeout(-1);
+	getch();
+}
+
+void	Game::destroy( void ) {
+	delwin(this->_battleWin);
+	delwin(this->_statsWin);
+	endwin();
 }
 
 void	Game::keyPressed( int key ) {
@@ -129,8 +182,12 @@ void	Game::drawBattle( void ) {
 
 void	Game::drawStats( void ) {
 	box(this->_statsWin, '|', '-');
-	mvwprintw(this->_statsWin, 2, 1, "Score: %d", this->_score);
-	mvwprintw(this->_statsWin, 3, 1, "Health: %d", this->_player.getHealth());
+	mvwprintw(this->_statsWin, 1, 6, "🍔🍟🌭🍦🍭🍕 Eat em up! 🍕🍭🍦🌭🍟🍔");
+	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 - 6, "Score : %05d", this->_score);
+	mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 - 6, "Health: ");
+	for (int i = 0; i < this->_player.getHealth(); i++) {
+		mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "❤️");
+	}
 	wrefresh(this->_statsWin);
 }
 

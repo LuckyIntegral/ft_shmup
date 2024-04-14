@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 01:45:34 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 13:11:52 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <ctime>
 # include <iostream>
 # include <ncurses.h>
+# include <unistd.h>
 
 # include "entity/player/Player.hpp"
 # include "entity/utils/BaseEntity.hpp"
@@ -80,15 +81,17 @@ public:
 	~Game();
 
 	// Methods
-	void				run( void );
-	void				init( void );
-	void				keyPressed( int key );
-	void				updateAll( size_t frame );
-	void				drawBattle( void );
-	void				drawStats( void );
-	void				spawnEntity( void );
-	void				drawEntity(  BaseEntity *entity  );
-	void				addEntity( BaseEntity *entity );
+	int				init( void );
+	void			run( void );
+	void			drawEnd( void );
+	void			destroy( void );
+	void			keyPressed( int key );
+	void			updateAll( size_t frame );
+	void			drawBattle( void );
+	void			drawStats( void );
+	void			spawnEntity( void );
+	void			drawEntity(  BaseEntity *entity  );
+	void			addEntity( BaseEntity *entity );
 
 	// Getters and setters
 	GameStatus		getGameStatus( void ) const;
