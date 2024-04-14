@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   EnemyIceCream.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 01:17:53 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 02:02:41 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 12:20:36 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # include "AEnemy.hpp"
 
-# define ICE_CREAM_SKIN "C"
+# define ICE_CREAM_SKIN "🍦"
 # define ICE_CREAM_SPEED 200
 # define ICE_CREAM_HEALTH 1
 # define ICE_CREAM_SHOOT_RATE 10

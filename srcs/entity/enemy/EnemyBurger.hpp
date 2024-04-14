@@ -18,7 +18,7 @@
 
 # include "AEnemy.hpp"
 
-# define BURGER_SKIN "B"
+# define BURGER_SKIN "🍔"
 # define BURGER_SPEED 100
 # define BURGER_HEALTH 1
 # define BURGER_BULLET_RATE 100

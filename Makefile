@@ -5,7 +5,7 @@
 CXX			= c++
 RM			= rm -rf
 CXXFLAGS	= -Wall -Wextra -Werror -MD -MP -g
-LINKFLAGS	= -lncurses
+LINKFLAGS	= -lncursesw
 MAKEFLAGS	= -j$(nproc) --no-print-directory
 
 NAME		= ft_shmup

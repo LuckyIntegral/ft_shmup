@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:07:40 by tkasbari          #+#    #+#             */
-/*   Updated: 2024/04/13 22:53:29 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 12:34:27 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #ifndef BULLET_HPP
 # define BULLET_HPP
 
-# define DEFAULT_BULLET_SKIN "|"
+# define DEFAULT_BULLET_SKIN "\xF0\x9F\x94\xBA"
 # define DEFAULT_BULLET_SPEED 1
 # define DEFAULT_BULLET_HEALTH 1
 

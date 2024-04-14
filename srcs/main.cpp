@@ -25,9 +25,8 @@ void	Game::run( void ) {
 	}
 	this->setStatsWin(subwin(this->getMainWin(), STATS_HEIGHT, SCREEN_WIDTH, 0, 0));
 	box(this->getStatsWin(), '|', '-');
-	//box(this->getStatsWin(), '🧱', '🧱');
 
-	mvwprintw(this->getStatsWin(), 1, 1, "🧱~FT_SHMUP~");
+	mvwprintw(this->getStatsWin(), 1, 1, "~FT_SHMUP~");
 	this->setBattleWin(subwin(this->getMainWin(), BATTLE_HEIGHT, SCREEN_WIDTH, STATS_HEIGHT, 0));
 
 	this->drawStats();

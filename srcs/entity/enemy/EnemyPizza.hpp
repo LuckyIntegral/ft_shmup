@@ -19,7 +19,7 @@
 
 # include "AEnemy.hpp"
 
-# define PIZZA_SKIN "P"
+# define PIZZA_SKIN "🍕"
 # define PIZZA_SPEED 180
 # define PIZZA_HEALTH 1
 # define PIZZA_SHOOT_RATE 10

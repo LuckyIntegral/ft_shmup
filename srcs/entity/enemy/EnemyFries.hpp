@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   EnemyFries.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 01:17:53 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 02:02:26 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 12:19:55 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # include "AEnemy.hpp"
 
-# define FRIES_SKIN "F"
+# define FRIES_SKIN "🍟"
 # define FRIES_SPEED 80
 # define FRIES_HEALTH 1
 # define FRIES_SHOOT_RATE 10
