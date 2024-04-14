@@ -6,7 +6,7 @@
 /*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 19:50:24 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 20:24:58 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #ifndef GAME_HPP
 # define GAME_HPP
 
+# define ENEMY_BULLET_SPEED 8
+# define ENEMY_BULLET_SKIN "🔻"
 
 # include <vector>
 # include <ncurses.h>
@@ -24,6 +26,7 @@
 # include <iostream>
 # include <ncurses.h>
 # include <unistd.h>
+#include <algorithm>
 
 # include "entity/player/Player.hpp"
 # include "entity/utils/BaseEntity.hpp"
@@ -57,8 +60,8 @@ typedef enum eGameStatus {
 
 class Game {
 protected:
-	std::vector<Enemy *>		_enemies;
-	std::vector<BaseEntity *>	_bullets;
+	std::vector<Enemy *>	_enemies;
+	std::vector<Bullet *>	_bullets;
 	GameStatus			_gameStatus;
 
 	Player				_player;
@@ -91,6 +94,12 @@ public:
 	void			drawEntity(  BaseEntity *entity  );
 	void			addEnemy( Enemy *entity );
 
+	void 			refreshBullets( int frame );
+	void			shootRandom( int frame );
+	void			checkBulletVsEnemy( void );
+	void			checkBulletVsPlayer( void );
+	void			advanceEnemies( size_t frame );
+
 	// Getters and setters
 	GameStatus		getGameStatus( void ) const;
 	void			setGameStatus( const GameStatus gameStatus );
@@ -103,6 +112,8 @@ public:
 
 	WINDOW			*getBattleWin( void ) const;
 	void			setBattleWin( WINDOW *battleWin );
+
+	std::vector<Bullet *>	getBullets( void );
 
 	class WrongWindowSizeException : public std::exception {
 		virtual const char *what() const throw();

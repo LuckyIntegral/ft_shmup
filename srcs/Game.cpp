@@ -3,11 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/04/14 16:24:18 by tkasbari         ###   ########.fr       */
-
+/*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
+/*   Updated: 2024/04/14 20:21:30 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +25,7 @@ Game::~Game() {
 	for (auto bullet : this->_bullets) {
 		delete bullet;
 	}
+	this->_bullets.clear();
 }
 
 void	Game::init( void ) {
@@ -120,8 +120,7 @@ void	Game::keyPressed( int key ) {
 	}
 }
 
-void	Game::updateAll( size_t frame ) {
-
+void	Game::advanceEnemies( size_t frame ) {
 	this->_player.refreshBullets(frame);
 	for (auto entity : this->_enemies) {
 		if (entity->getPosition().getY() > (BATTLE_HEIGHT - 3)) {
@@ -130,6 +129,9 @@ void	Game::updateAll( size_t frame ) {
 		}
 		entity->move(frame);
 	}
+}
+
+void	Game::checkBulletVsEnemy( void ) {
 	bool bulletHit = false;
 	for (auto bullet : this->_player.getBullets()) {
 		for (size_t i = 0; i < this->_enemies.size(); i++) {
@@ -143,6 +145,27 @@ void	Game::updateAll( size_t frame ) {
 			bulletHit = false;
 		}
 	}
+}
+
+void	Game::checkBulletVsPlayer( void ) {
+	for (auto bullet : this->getBullets()) {
+		if (bullet->getPosition() == this->_player.getPosition()){
+			this->_player.setHealth(this->_player.getHealth() - 1);
+			if (this->_player.getHealth() == 0) {
+				this->setGameStatus(LOST);
+			}
+			bullet->setPosition(Point(0, 0));
+		}
+	}
+}
+
+void	Game::updateAll( size_t frame ) {
+	this->shootRandom(frame);
+	this->_player.refreshBullets(frame);
+	this->refreshBullets(frame);
+	this->advanceEnemies(frame);
+	this->checkBulletVsEnemy();
+	this->checkBulletVsPlayer();
 	for (auto entity : this->_enemies) {
 		if (entity->getPosition() == this->_player.getPosition()) {
 			this->setGameStatus(LOST);
@@ -165,8 +188,6 @@ void	Game::updateAll( size_t frame ) {
 	if (frame % Game::_spawnRate == 0) {
 		this->spawnEntity();
 	}
-
-	// check if EnemyBurger-projectiles hit player
 	// check if projectiles hit projectiles
 }
 
@@ -200,6 +221,9 @@ void	Game::drawBattle( void ) {
 	for (auto bullet : this->_player.getBullets()) {
 		this->drawEntity(bullet);
 	}
+	for (auto bullet : this->getBullets()) {
+		this->drawEntity(bullet);
+	}
 	wrefresh(this->_battleWin);
 }
 
@@ -208,14 +232,18 @@ void	Game::drawStats( void ) {
 	mvwprintw(this->_statsWin, 1, 6, "🍔🍟🌭🍦🍭🍕 Eat em up! 🍕🍭🍦🌭🍟🍔");
 	mvwprintw(this->_statsWin, 2, SCREEN_WIDTH / 2 - 6, "Score : %05d", this->_score);
 	mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 - 6, "Health: ");
-	for (int i = 0; i < this->_player.getHealth(); i++) {
-		mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "❤️");
+	for (int i = 0; i < DEFAULT_PLAYER_HEALTH; i++) {
+		if (i < this->_player.getHealth())
+			mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "❤️");
+		else
+			mvwprintw(this->_statsWin, 3, SCREEN_WIDTH / 2 + 2 + (i * 2), "  ");
 	}
 	wrefresh(this->_statsWin);
 }
 
 void Game::drawEntity( BaseEntity *entity ) {
-	mvwprintw(this->getBattleWin(), entity->getPosition().getY(), entity->getPosition().getX(), "%s", entity->getSkin().c_str());	// TODO does not get printed right
+	mvwprintw(this->getBattleWin(), entity->getPosition().getY(),
+		entity->getPosition().getX(), "%s", entity->getSkin().c_str());
 }
 
 void Game::addEnemy( Enemy *entity ) {
@@ -252,6 +280,31 @@ WINDOW *Game::getBattleWin( void ) const {
 
 void Game::setBattleWin( WINDOW *battleWin ) {
 	this->_battleWin = battleWin;
+}
+
+std::vector<Bullet *>	Game::getBullets( void ) {
+	return (this->_bullets);
+}
+
+void 	Game::refreshBullets( int frame ) {
+	for (auto bullet : this->_bullets) {
+		bullet->move(frame);
+	}
+	for (auto bullet : this->_bullets) {
+		if (bullet->getPosition().getY() >= BATTLE_HEIGHT) {
+			auto bulletIt = std::find(this->_bullets.begin(), this->_bullets.end(), bullet);
+			delete *bulletIt;
+			this->_bullets.erase(std::remove(this->_bullets.begin(), this->_bullets.end(), bullet), this->_bullets.end());
+		}
+	}
+}
+
+void	Game::shootRandom( int frame ) {
+	if (frame % 100 == 0) {
+		int rand = time(NULL);
+		rand = rand % this->_entities.size();
+		this->_bullets.push_back(new Bullet(this->_entities[rand]->getPosition(), t_bulletType::ENEMY, ENEMY_BULLET_SKIN, ENEMY_BULLET_SPEED));
+	}
 }
 
 const char *Game::WrongWindowSizeException::what() const throw() {
