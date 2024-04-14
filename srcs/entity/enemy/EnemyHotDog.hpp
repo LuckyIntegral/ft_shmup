@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   EnemyHotDog.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 01:17:53 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 02:02:34 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 12:20:19 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # include "AEnemy.hpp"
 
-# define HOT_DOG_SKIN "H"
+# define HOT_DOG_SKIN "🌭"
 # define HOT_DOG_SPEED 120
 # define HOT_DOG_HEALTH 1
 # define HOT_DOG_SHOOT_RATE 10

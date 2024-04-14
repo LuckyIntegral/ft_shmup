@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   EnemyLolipop.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 01:17:53 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 02:03:34 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 12:20:58 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # include "AEnemy.hpp"
 
-# define LOLI_POP_SKIN "L"
+# define LOLI_POP_SKIN "🍭"
 # define LOLI_POP_SPEED 50
 # define LOLI_POP_HEALTH 1
 # define LOLI_POP_BULLET_RATE 15
