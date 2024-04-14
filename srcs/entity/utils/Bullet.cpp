@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bullet.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:07:40 by tkasbari          #+#    #+#             */
-/*   Updated: 2024/04/14 01:34:39 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 15:57:56 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,19 @@ Bullet::Bullet() : BaseEntity(DEFAULT_BULLET_HEALTH, Point(0, 0), DEFAULT_BULLET
 
 Bullet::Bullet( Point position, t_bulletType owner, int speed ) : BaseEntity(DEFAULT_BULLET_HEALTH, position, DEFAULT_BULLET_SKIN, speed), _type(owner) {}
 
+Bullet::Bullet( Point position, t_bulletType owner, std::string skin, int speed ) : BaseEntity(DEFAULT_BULLET_HEALTH, position, skin, speed), _type(owner) {}
+
 Bullet::~Bullet() {}
 
 void	Bullet::move( size_t frame ) {
+	int	bulletDirection;
 	if (frame % this->getSpeed() == 0) {
-		this->setPosition(Point(this->getPosition().getY() - 1, this->getPosition().getX()));
+		if (this->_type == t_bulletType::ENEMY)
+			bulletDirection = 1;
+		else
+			bulletDirection = -1;
+		this->setPosition(Point(this->getPosition().getY() + bulletDirection,
+			this->getPosition().getX()));
 	}
 }
 

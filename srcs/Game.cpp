@@ -6,11 +6,12 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 14:46:32 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 15:52:52 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Game.hpp"
+#include <iostream>
 
 int Game::_spawnRate = 300;
 
@@ -23,6 +24,7 @@ Game::~Game() {
 	for (auto bullet : this->_bullets) {
 		delete bullet;
 	}
+	this->_bullets.clear();
 }
 
 int	Game::init( void ) {
@@ -120,8 +122,9 @@ void	Game::keyPressed( int key ) {
 }
 
 void	Game::updateAll( size_t frame ) {
-
+	this->shootRandom(frame);
 	this->_player.refreshBullets(frame);
+	this->refreshBullets(frame);
 	for (auto entity : this->_entities) {
 		if (entity->getPosition().getY() > BATTLE_HEIGHT - 1) {
 			this->setGameStatus(LOST);
@@ -196,6 +199,9 @@ void	Game::drawBattle( void ) {
 	for (auto bullet : this->_player.getBullets()) {
 		this->drawEntity(bullet);
 	}
+	for (auto bullet : this->getBullets()) {
+		this->drawEntity(bullet);
+	}
 	wrefresh(this->_battleWin);
 }
 
@@ -248,4 +254,29 @@ WINDOW *Game::getBattleWin( void ) const {
 
 void Game::setBattleWin( WINDOW *battleWin ) {
 	this->_battleWin = battleWin;
+}
+
+std::vector<Bullet *>	Game::getBullets( void ) {
+	return (this->_bullets);
+}
+
+void 	Game::refreshBullets( int frame ) {
+	for (auto bullet : this->_bullets) {
+		bullet->move(frame);
+	}
+	for (auto bullet : this->_bullets) {
+		if (bullet->getPosition().getY() >= BATTLE_HEIGHT) {
+			auto bulletIt = std::find(this->_bullets.begin(), this->_bullets.end(), bullet);
+			delete *bulletIt;
+			this->_bullets.erase(std::remove(this->_bullets.begin(), this->_bullets.end(), bullet), this->_bullets.end());
+		}
+	}
+}
+
+void	Game::shootRandom( int frame ) {
+	if (frame % 100 == 0) {
+		int rand = time(NULL);
+		rand = rand % this->_entities.size();
+		this->_bullets.push_back(new Bullet(this->_entities[rand]->getPosition(), t_bulletType::ENEMY, ENEMY_BULLET_SKIN, ENEMY_BULLET_SPEED));
+	}
 }
