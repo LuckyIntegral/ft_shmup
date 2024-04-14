@@ -6,13 +6,12 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 18:05:52 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 18:18:46 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Game.hpp"
-#include <iostream>
 
 int Game::_spawnRate = 300;
 
@@ -151,18 +150,13 @@ void	Game::checkBulletVsEnemy( void ) {
 }
 
 void	Game::checkBulletVsPlayer( void ) {
-	bool bulletHit = false;
 	for (auto bullet : this->getBullets()) {
 		if (bullet->getPosition() == this->_player.getPosition()){
 			this->_player.setHealth(this->_player.getHealth() - 1);
 			if (this->_player.getHealth() == 0) {
 				this->setGameStatus(LOST);
 			}
-			bulletHit = true;
-		}
-		if (bulletHit) {
 			bullet->setPosition(Point(0, 0));
-			bulletHit = false;
 		}
 	}
 }

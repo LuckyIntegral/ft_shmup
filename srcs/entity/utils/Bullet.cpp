@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:07:40 by tkasbari          #+#    #+#             */
-/*   Updated: 2024/04/14 15:57:56 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 18:21:43 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,13 @@ Bullet::Bullet( Point position, t_bulletType owner, std::string skin, int speed 
 Bullet::~Bullet() {}
 
 void	Bullet::move( size_t frame ) {
-	int	bulletDirection;
 	if (frame % this->getSpeed() == 0) {
 		if (this->_type == t_bulletType::ENEMY)
-			bulletDirection = 1;
+			this->setPosition(Point(this->getPosition().getY() + 1,
+				this->getPosition().getX()));
 		else
-			bulletDirection = -1;
-		this->setPosition(Point(this->getPosition().getY() + bulletDirection,
-			this->getPosition().getX()));
+			this->setPosition(Point(this->getPosition().getY() - 1,
+				this->getPosition().getX()));
 	}
 }
 
