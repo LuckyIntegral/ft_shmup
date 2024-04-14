@@ -6,13 +6,14 @@
 /*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 20:21:30 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 20:49:50 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Game.hpp"
 #include "entity/enemy/EnemyFactory.hpp"
+#include <ncurses.h>
 
 int Game::_spawnRate = 300;
 
@@ -154,14 +155,13 @@ void	Game::checkBulletVsPlayer( void ) {
 			if (this->_player.getHealth() == 0) {
 				this->setGameStatus(LOST);
 			}
-			bullet->setPosition(Point(0, 0));
+			bullet->setPosition(Point(BATTLE_HEIGHT, 0));
 		}
 	}
 }
 
 void	Game::updateAll( size_t frame ) {
 	this->shootRandom(frame);
-	this->_player.refreshBullets(frame);
 	this->refreshBullets(frame);
 	this->advanceEnemies(frame);
 	this->checkBulletVsEnemy();
@@ -289,8 +289,6 @@ std::vector<Bullet *>	Game::getBullets( void ) {
 void 	Game::refreshBullets( int frame ) {
 	for (auto bullet : this->_bullets) {
 		bullet->move(frame);
-	}
-	for (auto bullet : this->_bullets) {
 		if (bullet->getPosition().getY() >= BATTLE_HEIGHT) {
 			auto bulletIt = std::find(this->_bullets.begin(), this->_bullets.end(), bullet);
 			delete *bulletIt;
@@ -302,8 +300,10 @@ void 	Game::refreshBullets( int frame ) {
 void	Game::shootRandom( int frame ) {
 	if (frame % 100 == 0) {
 		int rand = time(NULL);
-		rand = rand % this->_entities.size();
-		this->_bullets.push_back(new Bullet(this->_entities[rand]->getPosition(), t_bulletType::ENEMY, ENEMY_BULLET_SKIN, ENEMY_BULLET_SPEED));
+		if (this->_enemies.size() == 0)
+			return ;
+		rand = rand % this->_enemies.size();
+		this->_bullets.push_back(new Bullet(this->_enemies[rand]->getPosition(), t_bulletType::ENEMY, ENEMY_BULLET_SKIN, ENEMY_BULLET_SPEED));
 	}
 }
 
