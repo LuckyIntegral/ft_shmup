@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 20:24:58 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 21:34:38 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ public:
 	void			keyPressed( int key );
 	void			updateAll( size_t frame );
 	void			drawBattle( void );
-	void			drawStats( void );
+	void			drawStats( size_t frame);
 	void			spawnEntity( void );
 	void			drawEntity(  BaseEntity *entity  );
 	void			addEnemy( Enemy *entity );
@@ -118,6 +118,5 @@ public:
 		virtual const char *what() const throw();
 	};
 };
-
 
 #endif // GAME_HPP
