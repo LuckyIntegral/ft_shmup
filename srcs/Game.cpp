@@ -108,9 +108,9 @@ void	Game::keyPressed( int key ) {
 	} else if (key == KEY_DOWN) {
 		this->_player.goDown(PLAYER_SPEED);
 	} else if (key == KEY_LEFT) {
-		this->_player.goLeft(PLAYER_SPEED);
+		this->_player.goLeft(PLAYER_SPEED * 2);
 	} else if (key == KEY_RIGHT) {
-		this->_player.goRight(PLAYER_SPEED);
+		this->_player.goRight(PLAYER_SPEED * 2);
 	} else if (key == 'q' || key == 27) {
 		this->setGameStatus(ABORTED);
 	} else if (key == 'p') {
@@ -122,7 +122,7 @@ void	Game::keyPressed( int key ) {
 
 void	Game::advanceEnemies( size_t frame ) {
 	for (auto entity : this->_entities) {
-		if (entity->getPosition().getY() > BATTLE_HEIGHT - 1) {
+		if (entity->getPosition().getY() > (BATTLE_HEIGHT - 3)) {
 			this->setGameStatus(LOST);
 			break ;
 		}
@@ -193,24 +193,24 @@ void	Game::updateAll( size_t frame ) {
 }
 
 void	Game::spawnEntity( void ) {
-	static int rand = time(NULL);
-	rand = rand % (SCREEN_WIDTH - 2) + 1;
+	static int rand = time(NULL) % 27;
 
 	BaseEntity *entity = nullptr;
+	Point position(rand % 3 + 1, (rand % (SCREEN_WIDTH / 2 - 1) * 2) + 1);
 	if (rand % 6 == 0)
-		entity = new EnemyPizza(Point(rand % 3 + 1, rand));
+		entity = new EnemyPizza(position);
 	else if (rand % 6 == 1)
-		entity = new EnemyFries(Point(rand % 3 + 1, rand));
+		entity = new EnemyFries(position);
 	else if (rand % 6 == 2)
-		entity = new EnemyHotDog(Point(rand % 3 + 1, rand));
+		entity = new EnemyHotDog(position);
 	else if (rand % 6 == 3)
-		entity = new EnemyBurger(Point(rand % 3 + 1, rand));
+		entity = new EnemyBurger(position);
 	else if (rand % 6 == 4)
-		entity = new EnemyLolipop(Point(rand % 3 + 1, rand));
+		entity = new EnemyLolipop(position);
 	else
-		entity = new EnemyPizza(Point(rand % 3 + 1, rand));
+		entity = new EnemyPizza(position);
 	this->_entities.push_back(entity);
-	rand *= 37;
+	rand = (rand * 37 + 15) * 15 % 127;
 }
 
 void	Game::drawBattle( void ) {

@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:09:10 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 15:37:22 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 18:10:33 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	Player::goLeft( int steps ) {
 }
 
 void	Player::goRight( int steps ) {
-	if (this->getPosition().getX() + steps >= SCREEN_WIDTH - 1)
+	if (this->getPosition().getX() + steps >= SCREEN_WIDTH - 2)
 		return ;
 	this->setPosition(Point(this->getPosition().getY(), this->getPosition().getX() + steps));
 }
