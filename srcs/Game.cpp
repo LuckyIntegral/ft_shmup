@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/04/14 16:18:39 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 16:24:18 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Game::~Game() {
 	}
 }
 
-int	Game::init( void ) {
+void	Game::init( void ) {
 	int max_x, max_y;
 
 	setlocale(LC_ALL, "");
@@ -34,16 +34,14 @@ int	Game::init( void ) {
 	curs_set(0);
 	noecho(); 				// for ncurses, don't echo any keypresses
 	keypad(stdscr, TRUE); 	// for ncurses, enable special keys
-    timeout(0); 			// Set timeout for getch to non-blocking mode
+	timeout(0); 			// Set timeout for getch to non-blocking mode
 	getmaxyx(this->getMainWin(), max_y, max_x);
 	if (max_y < (BATTLE_HEIGHT + STATS_HEIGHT) || max_x < SCREEN_WIDTH) {
 		endwin();
-		std::cerr << "Terminal too small" << std::endl;
-		return (1);
+		throw WrongWindowSizeException();
 	}
 	this->setStatsWin(subwin(this->getMainWin(), STATS_HEIGHT, SCREEN_WIDTH, 0, 0));
 	this->setBattleWin(subwin(this->getMainWin(), BATTLE_HEIGHT, SCREEN_WIDTH, STATS_HEIGHT, 0));
-	return (0);
 }
 
 void	Game::drawEnd( void ) {
