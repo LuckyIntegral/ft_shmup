@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BaseEntity.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:07:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/13 20:52:13 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 19:30:18 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,18 @@
 
 #include <iostream>
 
-BaseEntity::BaseEntity() : _health(DEFAULT_HEALTH), _position(DEFAULT_POSITION) {}
-BaseEntity::BaseEntity( int health, Point position, std::string skin, int speed ) : _health(health), _position(position), _skin(skin), _speed(speed) {}
-BaseEntity::BaseEntity( const BaseEntity &other ) : _health(other._health), _position(other._position) {}
+BaseEntity::BaseEntity()
+		: _health(DEFAULT_HEALTH), _position(DEFAULT_POSITION), _skin(""),
+			_speed(0) {}
+
+BaseEntity::BaseEntity( int health, Point position,
+	std::string skin, int speed )
+		: _health(health), _position(position), _skin(skin),
+			_speed(speed) {}
+
+BaseEntity::BaseEntity( const BaseEntity &other )
+		: _health(other._health), _position(other._position) {}
+
 BaseEntity::~BaseEntity() {}
 
 int BaseEntity::getHealth( void ) const {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BaseEntity.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:07:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 15:53:58 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 20:23:15 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
