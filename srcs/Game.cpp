@@ -13,13 +13,14 @@
 
 
 #include "Game.hpp"
+#include "entity/enemy/EnemyFactory.hpp"
 
 int Game::_spawnRate = 300;
 
-Game::Game() : _entities(), _bullets(), _gameStatus(DEFAULT_GAME_STATUS), _player(Player(DEFAULT_PLAYER_HEALTH, Point(DEFAULT_POSITION_X, DEFAULT_POSITION_Y))), _score(0), _screenHeight(BATTLE_HEIGHT), _screenWidth(SCREEN_WIDTH) {}
+Game::Game() : _enemies(), _bullets(), _gameStatus(DEFAULT_GAME_STATUS), _player(Player(DEFAULT_PLAYER_HEALTH, Point(DEFAULT_POSITION_X, DEFAULT_POSITION_Y))), _score(0), _screenHeight(BATTLE_HEIGHT), _screenWidth(SCREEN_WIDTH) {}
 
 Game::~Game() {
-	for (auto entity : this->_entities) {
+	for (auto entity : this->_enemies) {
 		delete entity;
 	}
 	for (auto bullet : this->_bullets) {
@@ -122,7 +123,7 @@ void	Game::keyPressed( int key ) {
 void	Game::updateAll( size_t frame ) {
 
 	this->_player.refreshBullets(frame);
-	for (auto entity : this->_entities) {
+	for (auto entity : this->_enemies) {
 		if (entity->getPosition().getY() > (BATTLE_HEIGHT - 3)) {
 			this->setGameStatus(LOST);
 			break ;
@@ -131,13 +132,9 @@ void	Game::updateAll( size_t frame ) {
 	}
 	bool bulletHit = false;
 	for (auto bullet : this->_player.getBullets()) {
-		for (size_t i = 0; i < this->_entities.size(); i++) {
-			if (bullet->getPosition() == this->_entities[i]->getPosition()){
-				auto entity = this->_entities[i];
-				this->_entities.erase(this->_entities.begin() + i);
-				i--;
-				delete entity;
-				this->_score += 10;
+		for (size_t i = 0; i < this->_enemies.size(); i++) {
+			if (bullet->getPosition() == this->_enemies[i]->getPosition()){
+				this->_enemies[i]->setHealth(this->_enemies[i]->getHealth() - 1);
 				bulletHit = true;
 			}
 		}
@@ -146,10 +143,17 @@ void	Game::updateAll( size_t frame ) {
 			bulletHit = false;
 		}
 	}
-	for (auto entity : this->_entities) {
+	for (auto entity : this->_enemies) {
 		if (entity->getPosition() == this->_player.getPosition()) {
 			this->setGameStatus(LOST);
 			break ;
+		}
+	}
+	for (size_t i = 0; i < this->_enemies.size(); i++) {
+		if (this->_enemies[i]->getHealth() <= 0) {
+			this->_score += this->_enemies[i]->getScorePoints();
+			delete this->_enemies[i];
+			this->_enemies.erase(this->_enemies.begin() + i);
 		}
 	}
 	if (frame % 100 == 0) {
@@ -169,27 +173,27 @@ void	Game::updateAll( size_t frame ) {
 void	Game::spawnEntity( void ) {
 	static int rand = time(NULL) % 27;
 
-	BaseEntity *entity = nullptr;
+	Enemy *enemy = nullptr;
 	Point position(rand % 3 + 1, (rand % (SCREEN_WIDTH / 2 - 1) * 2) + 1);
 	if (rand % 6 == 0)
-		entity = new EnemyPizza(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::FRIES, position);
 	else if (rand % 6 == 1)
-		entity = new EnemyFries(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::HOT_DOG, position);
 	else if (rand % 6 == 2)
-		entity = new EnemyHotDog(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::ICE_CREAM, position);
 	else if (rand % 6 == 3)
-		entity = new EnemyBurger(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::BURGER, position);
 	else if (rand % 6 == 4)
-		entity = new EnemyLolipop(position);
+		enemy = EnemyFactory::createEnemy(EnemyType::LOLI_POP, position);
 	else
-		entity = new EnemyPizza(position);
-	this->_entities.push_back(entity);
+		enemy = EnemyFactory::createEnemy(EnemyType::PIZZA, position);
+	this->_enemies.push_back(enemy);
 	rand = (rand * 37 + 15) * 15 % 127;
 }
 
 void	Game::drawBattle( void ) {
 	box(this->_battleWin, '|', '-');
-	for (auto entity : this->_entities) {
+	for (auto entity : this->_enemies) {
 		this->drawEntity(entity);
 	}
 	this->drawEntity(&(this->_player));
@@ -214,8 +218,8 @@ void Game::drawEntity( BaseEntity *entity ) {
 	mvwprintw(this->getBattleWin(), entity->getPosition().getY(), entity->getPosition().getX(), "%s", entity->getSkin().c_str());	// TODO does not get printed right
 }
 
-void Game::addEntity( BaseEntity *entity ) {
-	this->_entities.push_back(entity);
+void Game::addEnemy( Enemy *entity ) {
+	this->_enemies.push_back(entity);
 }
 
 GameStatus Game::getGameStatus( void ) const {

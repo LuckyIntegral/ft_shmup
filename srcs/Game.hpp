@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
+/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 16:24:24 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 19:50:24 by vfrants          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,8 @@
 
 # include "entity/player/Player.hpp"
 # include "entity/utils/BaseEntity.hpp"
-# include "entity/enemy/EnemyBurger.hpp"
-# include "entity/enemy/EnemyFries.hpp"
-# include "entity/enemy/EnemyHotDog.hpp"
-# include "entity/enemy/EnemyLolipop.hpp"
-# include "entity/enemy/EnemyPizza.hpp"
+# include "entity/enemy/EnemyFactory.hpp"
+# include "entity/enemy/Enemy.hpp"
 
 # define DEFAULT_GAME_STATUS PLAYING
 # define DEFAULT_IS_WON false
@@ -60,7 +57,7 @@ typedef enum eGameStatus {
 
 class Game {
 protected:
-	std::vector<BaseEntity *>	_entities;
+	std::vector<Enemy *>		_enemies;
 	std::vector<BaseEntity *>	_bullets;
 	GameStatus			_gameStatus;
 
@@ -92,7 +89,7 @@ public:
 	void			drawStats( void );
 	void			spawnEntity( void );
 	void			drawEntity(  BaseEntity *entity  );
-	void			addEntity( BaseEntity *entity );
+	void			addEnemy( Enemy *entity );
 
 	// Getters and setters
 	GameStatus		getGameStatus( void ) const;
