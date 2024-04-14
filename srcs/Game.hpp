@@ -6,7 +6,7 @@
 /*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 18:04:40 by tkasbari         ###   ########.fr       */
+/*   Updated: 2024/04/14 18:26:22 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ typedef enum eGameStatus {
 	PLAYING,
 	PAUSED,
 	ABORTED,
-	LOST,
-	WON
+	OVER
 }			GameStatus;
 
 class Game {
