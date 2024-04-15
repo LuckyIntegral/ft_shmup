@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:17:11 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 23:26:17 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 23:41:11 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # define GAME_HPP
 
 # define ENEMY_BULLET_SPEED 8
-# define ENEMY_BULLET_SKIN "🔻"
+# define ENEMY_BULLET_SKIN "🍥"
 
 # include <vector>
 # include <ncurses.h>

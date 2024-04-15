@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Player.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 22:09:10 by vfrants           #+#    #+#             */
-/*   Updated: 2024/04/14 20:16:52 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 23:36:03 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <ncurses.h>
 
 Player::Player() : _bullets() {}
-Player::Player( int health, Point position ) : BaseEntity(health, position, "🍾", 1), _bullets() {}
+Player::Player( int health, Point position ) : BaseEntity(health, position, "🎾", 1), _bullets() {}
 Player::~Player() {
 	for (auto bullet : this->_bullets) {
 		delete bullet;

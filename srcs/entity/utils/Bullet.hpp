@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bullet.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfrants <vfrants@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: tkasbari <thomas.kasbarian@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 21:07:40 by tkasbari          #+#    #+#             */
-/*   Updated: 2024/04/14 20:40:02 by vfrants          ###   ########.fr       */
+/*   Updated: 2024/04/14 23:36:56 by tkasbari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #ifndef BULLET_HPP
 # define BULLET_HPP
 
-# define DEFAULT_BULLET_SKIN "🔺"
+# define DEFAULT_BULLET_SKIN "🥎"
 # define DEFAULT_BULLET_SPEED 1
 # define DEFAULT_BULLET_HEALTH 1
 # define DEFAULT_GAME_BULLET_SPEED 2
